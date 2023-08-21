@@ -18,19 +18,24 @@ function App() {
   const {url} = useSelector((state) => state.home)
 
   useEffect(() => {
-    apiTesting()
+    fetchApiConfig()
   },[])
 
-  const apiTesting = () => {
-    fetchDataFromApi("/movie/popular?language=en-US&page=1").then((res) => {
-      console.log(res);
-      dispatch(getApiConfigurations(res))
+  const fetchApiConfig = () => {
+    fetchDataFromApi("/configuration").then((res) => {
+      
+      const url = {
+        backdrop : res.images.secure_base_url + "original",
+        poster : res.images.secure_base_url + "original",
+        profile : res.images.secure_base_url + "original"
+      }
+      dispatch(getApiConfigurations(url))
     });
   }
 
   return (
     <BrowserRouter>
-      <Header />
+      {/* <Header /> */}
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/search/:query' element={<SearchResult />}/>
@@ -38,7 +43,7 @@ function App() {
         <Route path='/:mediaType/:id' element={<Details />}/>
         <Route path='*' element={<PageNotFound />}/>
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 }
